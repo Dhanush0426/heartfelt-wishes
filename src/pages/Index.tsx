@@ -125,12 +125,9 @@ const Index = () => {
         >
           <div className="relative">
             <div className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
-              <img
-                src="/placeholder.svg"
-                alt="Birthday person"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <div className="w-full h-full flex items-center justify-center bg-secondary text-4xl sm:text-5xl">
+                🎂
+              </div>
             </div>
             {/* Decorative ring */}
             <div className="absolute inset-0 rounded-full border-2 border-primary/10 scale-110 animate-gentle-pulse" />
