@@ -235,7 +235,44 @@
   font-family: 'Dancing Script', cursive;
 }
 
+/* 3D flip utilities */
+.perspective-800 {
+  perspective: 800px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Gentle sway for bunting */
+@keyframes gentle-sway {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.animate-gentle-sway {
+  animation: gentle-sway 2s ease-in-out infinite;
+}
+
 .glass {
+  background: hsl(300 30% 97% / 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(300 30% 88% / 0.4);
+}
   background: hsl(300 30% 97% / 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
