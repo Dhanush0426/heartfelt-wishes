@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
+import birthdayPhoto from "@/assets/birthday-photo.jpg";
 
-const floatingItems = Array.from({ length: 18 }, (_, i) => ({
+const floatingItems = Array.from({ length: 30 }, (_, i) => ({
   id: i,
-  emoji: i % 3 === 0 ? "💖" : i % 3 === 1 ? "✨" : "🤍",
+  emoji: ["💖", "✨", "🤍", "🎂", "🎈", "🎉"][i % 6],
   left: `${Math.random() * 100}%`,
-  delay: `${Math.random() * 8}s`,
-  duration: `${8 + Math.random() * 10}s`,
-  size: `${0.8 + Math.random() * 1.2}rem`,
+  delay: `${Math.random() * 10}s`,
+  duration: `${8 + Math.random() * 12}s`,
+  size: `${0.7 + Math.random() * 1.3}rem`,
 }));
 
-const particles = Array.from({ length: 12 }, (_, i) => ({
+const particles = Array.from({ length: 16 }, (_, i) => ({
   id: i,
   left: `${10 + Math.random() * 80}%`,
   top: `${10 + Math.random() * 80}%`,
@@ -18,7 +19,14 @@ const particles = Array.from({ length: 12 }, (_, i) => ({
   size: `${3 + Math.random() * 5}px`,
 }));
 
+const buntingFlags = Array.from({ length: 9 }, (_, i) => ({
+  id: i,
+  color: ["hsl(330 60% 75%)", "hsl(270 50% 80%)", "hsl(45 80% 75%)", "hsl(180 40% 75%)", "hsl(330 50% 85%)", "hsl(200 50% 78%)", "hsl(15 70% 78%)", "hsl(270 40% 85%)", "hsl(45 70% 80%)"][i],
+  delay: `${i * 0.1}s`,
+}));
+
 const Index = () => {
+  const [isFlipped, setIsFlipped] = useState(false);
   const [showGift, setShowGift] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [isMuted, setIsMuted] = useState(true);
@@ -35,7 +43,6 @@ const Index = () => {
       },
       { threshold: 0.15 }
     );
-
     document.querySelectorAll("[data-animate]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
@@ -56,12 +63,33 @@ const Index = () => {
   const isVisible = (id: string) => visibleSections.has(id);
 
   return (
-    <div className="relative min-h-screen overflow-hidden"
+    <div
+      className="relative min-h-screen overflow-hidden"
       style={{
         background: "linear-gradient(135deg, hsl(330 50% 92%), hsl(270 40% 92%), hsl(300 20% 97%), hsl(0 0% 100%))",
       }}
     >
-      {/* Floating hearts & sparkles */}
+      {/* Bunting / triangle flags decoration */}
+      <div className="fixed top-0 left-0 right-0 z-20 flex justify-center pointer-events-none">
+        <svg viewBox="0 0 900 80" className="w-full max-w-3xl" style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>
+          <path d="M0 10 Q450 50 900 10" stroke="hsl(330 40% 70%)" strokeWidth="2" fill="none" />
+          {buntingFlags.map((flag, i) => {
+            const x = 50 + i * 100;
+            return (
+              <polygon
+                key={flag.id}
+                points={`${x - 18},12 ${x + 18},12 ${x},55`}
+                fill={flag.color}
+                opacity="0.85"
+                className="animate-gentle-sway"
+                style={{ animationDelay: flag.delay, transformOrigin: `${x}px 12px` }}
+              />
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Floating emojis */}
       {floatingItems.map((item) => (
         <span
           key={item.id}
@@ -95,6 +123,12 @@ const Index = () => {
         />
       ))}
 
+      {/* Candle decorations */}
+      <div className="fixed top-16 left-4 z-10 pointer-events-none opacity-60 text-2xl sm:text-3xl animate-gentle-pulse">🕯️</div>
+      <div className="fixed top-24 right-6 z-10 pointer-events-none opacity-60 text-2xl sm:text-3xl animate-gentle-pulse" style={{ animationDelay: "1s" }}>🕯️</div>
+      <div className="fixed bottom-20 left-8 z-10 pointer-events-none opacity-50 text-xl animate-gentle-pulse" style={{ animationDelay: "2s" }}>🕯️</div>
+      <div className="fixed bottom-32 right-4 z-10 pointer-events-none opacity-50 text-xl animate-gentle-pulse" style={{ animationDelay: "0.5s" }}>🕯️</div>
+
       {/* Music toggle */}
       <button
         onClick={toggleMusic}
@@ -106,6 +140,9 @@ const Index = () => {
 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center px-4 py-10 sm:py-16 md:py-20 max-w-2xl mx-auto">
+        {/* Cake decoration at top */}
+        <div className="text-4xl sm:text-5xl mb-2 animate-gentle-pulse">🎂</div>
+
         {/* Hero heading */}
         <div
           id="hero"
@@ -117,20 +154,40 @@ const Index = () => {
           </h1>
         </div>
 
-        {/* Photo section */}
+        {/* Flip photo section */}
         <div
           id="photo"
           data-animate
           className={`mt-10 sm:mt-14 transition-all duration-1000 ${isVisible("photo") ? "animate-zoom-in" : "opacity-0"}`}
         >
-          <div className="relative">
-            <div className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
-              <div className="w-full h-full flex items-center justify-center bg-secondary text-4xl sm:text-5xl">
-                🎂
+          <div
+            className="relative cursor-pointer perspective-800"
+            onClick={() => setIsFlipped(!isFlipped)}
+            title="Tap to flip!"
+          >
+            <div
+              className={`w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 transition-transform duration-700 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
+            >
+              {/* Front: Cake */}
+              <div className="absolute inset-0 backface-hidden rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
+                <div className="w-full h-full flex items-center justify-center bg-secondary text-5xl sm:text-6xl">
+                  🎂
+                </div>
+              </div>
+              {/* Back: Photo */}
+              <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
+                <img
+                  src={birthdayPhoto}
+                  alt="Birthday photo"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             {/* Decorative ring */}
             <div className="absolute inset-0 rounded-full border-2 border-primary/10 scale-110 animate-gentle-pulse" />
+            <p className="text-xs text-muted-foreground mt-3 text-center">
+              {isFlipped ? "tap to flip back" : "tap the cake! 🎂"}
+            </p>
           </div>
         </div>
 
@@ -145,7 +202,7 @@ const Index = () => {
               Happiest bday my dear <s className="text-muted-foreground">best friend</s>…
             </p>
             <p>
-              ohh I'm sorry 😄 I know you don't like 'best friends'…
+              ohh I'm sorry 😄 I know you don't like "best friends"…
             </p>
             <p>
               Happy birthday my dear friend 🤍
@@ -168,11 +225,6 @@ const Index = () => {
             <p>
               Stay the same kind-hearted person you are… don't change for anyone 🤍
             </p>
-            <p className="font-medium text-foreground/90">
-              And whatever you may call me,
-              <br />
-              you are my best friend 😊
-            </p>
           </div>
         </div>
 
@@ -180,11 +232,18 @@ const Index = () => {
         <div
           id="extra"
           data-animate
-          className={`mt-8 sm:mt-10 text-center space-y-3 text-foreground/70 text-sm sm:text-base transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
+          className={`mt-8 sm:mt-10 w-full glass rounded-2xl p-6 sm:p-8 text-foreground/70 text-sm sm:text-base space-y-3 transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
         >
-          <p>You're one of the kindest people I know.</p>
-          <p>I'm really happy that I got to know you.</p>
-          <p>Stay happy always ✨</p>
+          <p>You're one of the kindest people I know 😊</p>
+          <p>The way you are… it's really rare these days.</p>
+          <p>I hope you always find reasons to smile, even on tough days ✨</p>
+          <p>You deserve good things, always.</p>
+          <p>Even your silence feels peaceful… that's something special.</p>
+          <p className="font-medium text-foreground/90 pt-2">
+            And whatever you may call me,
+            <br />
+            you are my best friend 😊
+          </p>
         </div>
 
         {/* Gift button */}
@@ -205,12 +264,22 @@ const Index = () => {
         {showGift && (
           <div className="mt-8 glass rounded-2xl p-6 sm:p-8 text-center animate-reveal shadow-xl">
             <p className="font-dancing text-2xl sm:text-3xl md:text-4xl text-primary font-semibold animate-text-glow">
-              You deserve all the happiness in the world ✨
+              Some people just make the world better… you're one of them ✨
             </p>
           </div>
         )}
 
-        {/* Bottom spacer */}
+        {/* Bottom line */}
+        <div
+          id="bottom"
+          data-animate
+          className={`mt-10 text-center transition-all duration-1000 ${isVisible("bottom") ? "animate-fade-in-up" : "opacity-0"}`}
+        >
+          <p className="font-dancing text-lg sm:text-xl text-primary/70 animate-text-glow">
+            Some people just make the world better… you're one of them ✨
+          </p>
+        </div>
+
         <div className="h-16" />
       </div>
     </div>
