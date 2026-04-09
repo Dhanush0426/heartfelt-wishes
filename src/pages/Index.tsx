@@ -150,7 +150,7 @@ const Index = () => {
           className={`transition-all duration-1000 ${isVisible("hero") ? "animate-fade-in-up" : "opacity-0"}`}
         >
           <h1 className="font-dancing text-5xl sm:text-6xl md:text-7xl font-bold text-primary animate-text-glow text-center leading-tight">
-            Happy Birthday 😊
+            Happy Birthday Vismayaa 💖
           </h1>
         </div>
 
