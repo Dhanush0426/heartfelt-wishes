@@ -1,10 +1,11 @@
 
 
-## Replace Heart with Crown/Princess Emoji in Heading
+## Update Quote Text
 
-Change the 💖 emoji in the main heading "Happy Birthday Vismayaa 💖" to a princess-themed emoji like 👑 (crown).
+Replace the line "Even your silence feels peaceful… that's something special." with "Your simplicity is something really special 😊" in `src/pages/Index.tsx`.
 
 ### Change
-- **File:** `src/pages/Index.tsx` (line ~153)
-- Replace `💖` with `👑` in the h1 heading text
+- **File:** `src/pages/Index.tsx` (in the `#extra` section)
+- Find: `Even your silence feels peaceful… that's something special.`
+- Replace with: `Your simplicity is something really special 😊`
 
