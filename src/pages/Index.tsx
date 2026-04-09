@@ -238,7 +238,7 @@ const Index = () => {
           <p>The way you are… it's really rare these days.</p>
           <p>I hope you always find reasons to smile, even on tough days ✨</p>
           <p>You deserve good things, always.</p>
-          <p>Even your silence feels peaceful… that's something special.</p>
+          <p>Your simplicity is something really special 😊</p>
           <p className="font-medium text-foreground/90 pt-2">
             And whatever you may call me,
             <br />
