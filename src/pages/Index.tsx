@@ -269,16 +269,6 @@ const Index = () => {
           </div>
         )}
 
-        {/* Bottom line */}
-        <div
-          id="bottom"
-          data-animate
-          className={`mt-10 text-center transition-all duration-1000 ${isVisible("bottom") ? "animate-fade-in-up" : "opacity-0"}`}
-        >
-          <p className="font-dancing text-lg sm:text-xl text-primary/70 animate-text-glow">
-            Some people just make the world better… you're one of them ✨
-          </p>
-        </div>
 
         <div className="h-16" />
       </div>
