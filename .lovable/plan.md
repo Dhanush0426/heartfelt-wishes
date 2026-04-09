@@ -1,10 +1,10 @@
 
 
-## Remove Bottom Quote Line
+## Replace Heart with Crown/Princess Emoji in Heading
 
-Remove the "Some people just make the world better… you're one of them ✨" text that appears at the very bottom of the page (the `#bottom` section), while keeping the same line inside the gift reveal message intact.
+Change the 💖 emoji in the main heading "Happy Birthday Vismayaa 💖" to a princess-themed emoji like 👑 (crown).
 
 ### Change
-- **File:** `src/pages/Index.tsx`
-- Remove the `#bottom` `div` block (approximately lines 196-204) that contains the duplicate quote at the bottom of the page.
+- **File:** `src/pages/Index.tsx` (line ~153)
+- Replace `💖` with `👑` in the h1 heading text
 
