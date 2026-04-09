@@ -25,9 +25,12 @@ const buntingFlags = Array.from({ length: 9 }, (_, i) => ({
   delay: `${i * 0.1}s`,
 }));
 
+const confettiEmojis = ["🎉", "🎊", "✨", "💖", "🌟", "🎀", "💫", "🤍"];
+
 const Index = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showGift, setShowGift] = useState(false);
+  const [giftClicked, setGiftClicked] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -253,17 +256,40 @@ const Index = () => {
           className={`mt-10 sm:mt-14 transition-all duration-1000 ${isVisible("gift") ? "animate-fade-in-up" : "opacity-0"}`}
         >
           <button
-            onClick={() => setShowGift(true)}
-            className="px-8 py-3 sm:px-10 sm:py-4 rounded-full bg-primary text-primary-foreground font-medium text-base sm:text-lg shadow-lg transition-all duration-300 hover:scale-105 animate-glow-pulse hover:shadow-2xl active:scale-95"
+            onClick={() => {
+              setGiftClicked(true);
+              setTimeout(() => setShowGift(true), 600);
+            }}
+            className={`px-8 py-3 sm:px-10 sm:py-4 rounded-full bg-primary text-primary-foreground font-medium text-base sm:text-lg shadow-lg transition-all duration-300 hover:scale-105 animate-glow-pulse hover:shadow-2xl active:scale-95 ${giftClicked ? "animate-gift-unwrap" : ""}`}
           >
             Click here 🎁
           </button>
         </div>
 
+        {/* Confetti burst */}
+        {giftClicked && (
+          <div className="relative w-full flex justify-center -mt-4 pointer-events-none">
+            {confettiEmojis.map((emoji, i) => (
+              <span
+                key={i}
+                className="absolute text-xl sm:text-2xl animate-confetti-pop"
+                style={{
+                  left: `${30 + Math.random() * 40}%`,
+                  animationDelay: `${i * 0.08}s`,
+                  animationDuration: `${0.8 + Math.random() * 0.5}s`,
+                }}
+              >
+                {emoji}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Hidden gift message */}
         {showGift && (
-          <div className="mt-8 glass rounded-2xl p-6 sm:p-8 text-center animate-reveal shadow-xl">
-            <p className="font-dancing text-2xl sm:text-3xl md:text-4xl text-primary font-semibold animate-text-glow">
+          <div className="mt-8 glass rounded-2xl p-6 sm:p-8 text-center animate-reveal shadow-xl relative overflow-hidden">
+            <div className="absolute inset-0 rounded-2xl animate-sparkle-burst bg-primary/10 pointer-events-none" />
+            <p className="font-dancing text-2xl sm:text-3xl md:text-4xl text-primary font-semibold animate-text-glow relative z-10">
               Some people just make the world better… you're one of them ✨
             </p>
           </div>
