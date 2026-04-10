@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
 
-const floatingItems = Array.from({ length: 30 }, (_, i) => ({
+const floatingItems = Array.from({ length: 45 }, (_, i) => ({
   id: i,
   emoji: ["💖", "✨", "🤍", "🎂", "🎈", "🎉"][i % 6],
   left: `${Math.random() * 100}%`,
@@ -27,12 +27,15 @@ const buntingFlags = Array.from({ length: 9 }, (_, i) => ({
 
 const confettiEmojis = ["🎉", "🎊", "✨", "💖", "🌟", "🎀", "💫", "🤍"];
 
+const flipSparkleEmojis = ["✨", "💖", "🌟", "💫", "✨", "💖", "🌟", "💫"];
+
 const Index = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showGift, setShowGift] = useState(false);
   const [giftClicked, setGiftClicked] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [isMuted, setIsMuted] = useState(true);
+  const [showFlipSparkle, setShowFlipSparkle] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -61,6 +64,15 @@ const Index = () => {
       audioRef.current.pause();
     }
     setIsMuted(!isMuted);
+  };
+
+  const handleFlip = () => {
+    const newFlipped = !isFlipped;
+    setIsFlipped(newFlipped);
+    if (newFlipped) {
+      setShowFlipSparkle(true);
+      setTimeout(() => setShowFlipSparkle(false), 1000);
+    }
   };
 
   const isVisible = (id: string) => visibleSections.has(id);
@@ -96,7 +108,7 @@ const Index = () => {
       {floatingItems.map((item) => (
         <span
           key={item.id}
-          className="fixed pointer-events-none z-0 animate-float-up"
+          className="fixed pointer-events-none z-30 animate-float-up"
           style={{
             left: item.left,
             bottom: "-20px",
@@ -165,7 +177,7 @@ const Index = () => {
         >
           <div
             className="relative cursor-pointer perspective-800"
-            onClick={() => setIsFlipped(!isFlipped)}
+            onClick={handleFlip}
             title="Tap to flip!"
           >
             <div
@@ -186,6 +198,33 @@ const Index = () => {
                 />
               </div>
             </div>
+
+            {/* Flip sparkle effect */}
+            {showFlipSparkle && (
+              <>
+                <div className="absolute inset-0 rounded-full animate-flip-sparkle border-2 border-primary/40 pointer-events-none" />
+                {flipSparkleEmojis.map((emoji, i) => {
+                  const angle = (i / flipSparkleEmojis.length) * 360;
+                  const rad = (angle * Math.PI) / 180;
+                  const radius = 90;
+                  return (
+                    <span
+                      key={i}
+                      className="absolute pointer-events-none text-lg animate-confetti-pop"
+                      style={{
+                        left: `calc(50% + ${Math.cos(rad) * radius}px - 10px)`,
+                        top: `calc(50% + ${Math.sin(rad) * radius}px - 10px)`,
+                        animationDelay: `${i * 0.05}s`,
+                        animationDuration: "0.8s",
+                      }}
+                    >
+                      {emoji}
+                    </span>
+                  );
+                })}
+              </>
+            )}
+
             {/* Decorative ring */}
             <div className="absolute inset-0 rounded-full border-2 border-primary/10 scale-110 animate-gentle-pulse" />
             <p className="text-xs text-muted-foreground mt-3 text-center">
@@ -202,7 +241,7 @@ const Index = () => {
         >
           <div className="space-y-4 text-foreground/80 text-sm sm:text-base leading-relaxed">
             <p>
-              Happiest bday my dear <s className="text-muted-foreground">best friend</s>…
+              Happiest birthday my dear <s className="text-muted-foreground">best friend</s>…
             </p>
             <p>
               ohh I'm sorry 😄 I know you don't like "best friends"…
@@ -238,14 +277,14 @@ const Index = () => {
           className={`mt-8 sm:mt-10 w-full glass rounded-2xl p-6 sm:p-8 text-foreground/70 text-sm sm:text-base space-y-3 transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
         >
           <p>You're one of the kindest people I know 😊</p>
-          <p>The way you are… it's really rare these days.</p>
+          <p>The way you are… it's really rare these days 💎</p>
           <p>I hope you always find reasons to smile, even on tough days ✨</p>
           <p>You deserve good things, always.</p>
-          <p>Your simplicity is something really special 😊</p>
+          <p>Your simplicity is something really special 🙏</p>
           <p className="font-medium text-foreground/90 pt-2">
             And whatever you may call me,
             <br />
-            you are my best friend 😊
+            you are my best friend 💖
           </p>
         </div>
 
@@ -294,7 +333,6 @@ const Index = () => {
             </p>
           </div>
         )}
-
 
         <div className="h-16" />
       </div>
