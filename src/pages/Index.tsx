@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
+import greetingCard from "@/assets/greeting-card.png";
 import { useClickConfetti } from "@/hooks/useClickConfetti";
 
 const floatingItems = Array.from({ length: 45 }, (_, i) => ({
@@ -322,86 +323,12 @@ const Index = () => {
 
         {/* Hidden greeting card reveal */}
         {showGift && (
-          <div className="mt-10 w-full max-w-md mx-auto relative animate-reveal">
-            {/* Sparkle burst around card */}
-            {["✨", "💖", "🌟", "💫", "✨", "💖"].map((emoji, i) => {
-              const positions = [
-                { top: "-10px", left: "10%" },
-                { top: "-20px", right: "15%" },
-                { top: "30%", left: "-20px" },
-                { top: "40%", right: "-20px" },
-                { bottom: "-10px", left: "20%" },
-                { bottom: "-15px", right: "25%" },
-              ];
-              return (
-                <span
-                  key={i}
-                  className="absolute text-xl pointer-events-none animate-confetti-pop z-20"
-                  style={{ ...positions[i], animationDelay: `${0.4 + i * 0.08}s`, animationDuration: "1.2s" }}
-                >
-                  {emoji}
-                </span>
-              );
-            })}
-
-            {/* The greeting card */}
-            <div className="relative card-paper card-emboss rounded-lg p-8 sm:p-10 md:p-12 animate-paper-float overflow-hidden">
-              {/* Rose-gold beaded border (outer) */}
-              <div
-                className="absolute inset-3 rounded pointer-events-none"
-                style={{
-                  border: "1px dashed #c9a48a",
-                  boxShadow: "inset 0 0 0 3px transparent",
-                }}
-              />
-              {/* Inner thin solid border */}
-              <div
-                className="absolute inset-5 rounded-sm pointer-events-none"
-                style={{ border: "0.5px solid rgba(201, 164, 138, 0.6)" }}
-              />
-
-              {/* Pink satin ribbon bow — top-left */}
-              <svg
-                viewBox="0 0 100 100"
-                className="absolute -top-1 -left-1 w-20 h-20 sm:w-24 sm:h-24 animate-bow-bounce pointer-events-none drop-shadow-lg"
-                style={{ filter: "drop-shadow(2px 4px 6px rgba(200, 100, 120, 0.35))" }}
-              >
-                <defs>
-                  <linearGradient id="ribbonGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#f8c8d4" />
-                    <stop offset="50%" stopColor="#e89bb0" />
-                    <stop offset="100%" stopColor="#c97089" />
-                  </linearGradient>
-                  <linearGradient id="ribbonHi" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-                  </linearGradient>
-                </defs>
-                {/* Trailing tails */}
-                <path d="M48 48 Q42 70 36 88 L46 86 Q50 70 52 52 Z" fill="url(#ribbonGrad)" />
-                <path d="M52 48 Q60 68 70 84 L60 86 Q54 70 52 52 Z" fill="url(#ribbonGrad)" />
-                <path d="M48 50 Q44 68 40 84" stroke="url(#ribbonHi)" strokeWidth="1.5" fill="none" />
-                {/* Left loop */}
-                <path d="M50 45 Q28 32 22 45 Q20 58 50 52 Z" fill="url(#ribbonGrad)" />
-                <path d="M30 38 Q26 44 28 50" stroke="url(#ribbonHi)" strokeWidth="1.5" fill="none" />
-                {/* Right loop */}
-                <path d="M50 45 Q72 32 78 45 Q80 58 50 52 Z" fill="url(#ribbonGrad)" />
-                <path d="M70 38 Q74 44 72 50" stroke="url(#ribbonHi)" strokeWidth="1.5" fill="none" />
-                {/* Knot */}
-                <ellipse cx="50" cy="48" rx="6" ry="7" fill="url(#ribbonGrad)" />
-                <ellipse cx="50" cy="46" rx="3" ry="2" fill="rgba(255,255,255,0.5)" />
-              </svg>
-
-              {/* Message */}
-              <div className="relative z-10 py-8 sm:py-10 px-2 sm:px-4 text-center">
-                <p className="font-dancing text-2xl sm:text-3xl md:text-4xl font-semibold leading-relaxed text-rose-gold">
-                  Some people just<br />
-                  make the world<br />
-                  better… you're<br />
-                  one of them <span className="text-amber-400" style={{ WebkitTextFillColor: "initial" }}>✨</span>
-                </p>
-              </div>
-            </div>
+          <div className="mt-10 w-full flex justify-center animate-reveal">
+            <img
+              src={greetingCard}
+              alt="Birthday greeting card"
+              className="w-full max-w-md rounded-2xl shadow-2xl animate-paper-float"
+            />
           </div>
         )}
 
