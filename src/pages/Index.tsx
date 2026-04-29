@@ -39,6 +39,8 @@ const Index = () => {
   const [showFlipSparkle, setShowFlipSparkle] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  useClickConfetti();
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
