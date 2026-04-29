@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
+import { useClickConfetti } from "@/hooks/useClickConfetti";
 
 const floatingItems = Array.from({ length: 45 }, (_, i) => ({
   id: i,
@@ -37,6 +38,8 @@ const Index = () => {
   const [isMuted, setIsMuted] = useState(true);
   const [showFlipSparkle, setShowFlipSparkle] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useClickConfetti();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
