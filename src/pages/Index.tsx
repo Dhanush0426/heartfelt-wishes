@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
+import { useClickConfetti } from "@/hooks/useClickConfetti";
 
 const floatingItems = Array.from({ length: 45 }, (_, i) => ({
   id: i,
