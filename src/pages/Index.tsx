@@ -262,13 +262,7 @@ const Index = () => {
               Stay happy and stay beautiful…
             </p>
             <p>
-              You're one of the most genuine people I've ever met 😊
-            </p>
-            <p>
               I'm really glad that I got to know you.
-            </p>
-            <p>
-              Stay the same kind-hearted person you are… don't change for anyone 🤍
             </p>
           </div>
         </div>
@@ -279,11 +273,9 @@ const Index = () => {
           data-animate
           className={`mt-8 sm:mt-10 w-full glass rounded-2xl p-6 sm:p-8 text-foreground/70 text-sm sm:text-base space-y-3 transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
         >
-          <p>You're one of the kindest people I know 😊</p>
-          <p>The way you are… it's really rare these days 💎</p>
           <p>I hope you always find reasons to smile, even on tough days ✨</p>
           <p>You deserve good things, always.</p>
-          <p>Your simplicity is something really special 🙏</p>
+          <p>Your simplicity is something really special😇✨</p>
           <p className="font-medium text-foreground/90 pt-2">
             And whatever you may call me,
             <br />
