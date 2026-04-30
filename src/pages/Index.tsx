@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
 import greetingCard from "@/assets/greeting-card.png";
+import greetingCardMobile from "@/assets/greeting-card-mobile.webp";
 import { useClickConfetti } from "@/hooks/useClickConfetti";
 
 const floatingItems = Array.from({ length: 45 }, (_, i) => ({
@@ -46,8 +47,8 @@ const Index = () => {
   // Preload greeting card image so the modal opens instantly with no stutter
   useEffect(() => {
     const img = new Image();
-    img.onload = () => setCardLoaded(true);
-    img.src = greetingCard;
+    img.src = window.innerWidth < 768 ? greetingCardMobile : greetingCard;
+    img.decode?.().then(() => setCardLoaded(true)).catch(() => setCardLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -335,16 +336,19 @@ const Index = () => {
             className="mt-10 w-full flex justify-center animate-reveal"
             style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
           >
-            <img
-              src={greetingCard}
-              alt="Birthday greeting card"
-              decoding="async"
-              fetchPriority="high"
-              sizes="(max-width: 768px) 90vw, 28rem"
-              className={`w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 ${cardLoaded ? "opacity-100" : "opacity-0"}`}
-              style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
-              onLoad={() => setCardLoaded(true)}
-            />
+            <picture className="w-full max-w-md">
+              <source media="(max-width: 767px)" srcSet={greetingCardMobile} type="image/webp" />
+              <img
+                src={greetingCard}
+                alt="Birthday greeting card"
+                decoding="async"
+                fetchPriority="high"
+                sizes="(max-width: 768px) 90vw, 28rem"
+                className={`w-full h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 ${cardLoaded ? "opacity-100" : "opacity-0"}`}
+                style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)", backfaceVisibility: "hidden" }}
+                onLoad={() => setCardLoaded(true)}
+              />
+            </picture>
           </div>
         )}
 
