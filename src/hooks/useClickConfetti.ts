@@ -31,29 +31,43 @@ const THROTTLE_MS = 120;
 
 export function useClickConfetti() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number | null>(null);
   const lastBurstRef = useRef<number>(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const isMobile = window.innerWidth < 768;
-    const baseCount = 24;
-
-    const canvas = document.createElement("canvas");
-    canvas.style.cssText =
-      "position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;will-change:transform;transform:translate3d(0,0,0);";
-    document.body.appendChild(canvas);
-    canvasRef.current = canvas;
-    const ctx = canvas.getContext("2d", { alpha: true })!;
+    const isMobile = () => window.innerWidth < 768;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+      const canvas = canvasRef.current;
+      const ctx = ctxRef.current;
+      if (!canvas || !ctx) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-    resize();
+
+    const ensureCanvas = () => {
+      if (canvasRef.current && ctxRef.current) return ctxRef.current;
+      const canvas = document.createElement("canvas");
+      canvas.style.cssText =
+        "position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;transform:translate3d(0,0,0);";
+      document.body.appendChild(canvas);
+      canvasRef.current = canvas;
+      ctxRef.current = canvas.getContext("2d", { alpha: true });
+      resize();
+      return ctxRef.current;
+    };
+
+    const destroyCanvas = () => {
+      canvasRef.current?.remove();
+      canvasRef.current = null;
+      ctxRef.current = null;
+    };
+
     window.addEventListener("resize", resize);
 
     const burst = (x: number, y: number) => {
@@ -61,13 +75,18 @@ export function useClickConfetti() {
       if (now - lastBurstRef.current < THROTTLE_MS) return;
       lastBurstRef.current = now;
 
-      const remaining = MAX_PARTICLES - particlesRef.current.length;
+      const mobile = isMobile();
+      const maxParticles = mobile ? 90 : MAX_PARTICLES;
+      const baseCount = mobile ? 14 : 24;
+      const remaining = maxParticles - particlesRef.current.length;
       if (remaining <= 0) return;
       const count = Math.min(baseCount, remaining);
+      const ctx = ensureCanvas();
+      if (!ctx) return;
 
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
-        const speed = 3 + Math.random() * 4;
+        const speed = (mobile ? 2.5 : 3) + Math.random() * (mobile ? 3 : 4);
         const shapes: Particle["shape"][] = ["circle", "rect", "star"];
         particlesRef.current.push({
           x,
@@ -80,13 +99,13 @@ export function useClickConfetti() {
           rot: Math.random() * Math.PI * 2,
           vr: (Math.random() - 0.5) * 0.3,
           life: 0,
-          maxLife: 60 + Math.random() * 30,
+          maxLife: (mobile ? 45 : 60) + Math.random() * (mobile ? 20 : 30),
         });
       }
       if (rafRef.current == null) rafRef.current = requestAnimationFrame(tick);
     };
 
-    const drawStar = (cx: number, cy: number, r: number) => {
+    const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) => {
       ctx.beginPath();
       for (let i = 0; i < 10; i++) {
         const a = (Math.PI / 5) * i - Math.PI / 2;
@@ -101,9 +120,15 @@ export function useClickConfetti() {
     };
 
     const tick = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const canvas = canvasRef.current;
+      const ctx = ctxRef.current;
+      if (!canvas || !ctx) {
+        rafRef.current = null;
+        return;
+      }
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
       const arr = particlesRef.current;
-      const useShadow = !isMobile;
+      const useShadow = !isMobile();
       for (let i = arr.length - 1; i >= 0; i--) {
         const p = arr[i];
         p.life++;
@@ -130,7 +155,7 @@ export function useClickConfetti() {
         } else if (p.shape === "rect") {
           ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
         } else {
-          drawStar(0, 0, p.size / 2);
+          drawStar(ctx, 0, 0, p.size / 2);
         }
         ctx.restore();
         if (p.life >= p.maxLife || p.y > window.innerHeight + 30) {
@@ -141,7 +166,8 @@ export function useClickConfetti() {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = null;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        destroyCanvas();
       }
     };
 
@@ -155,7 +181,7 @@ export function useClickConfetti() {
       window.removeEventListener("pointerdown", onPointer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       particlesRef.current = [];
-      canvas.remove();
+      destroyCanvas();
     };
   }, []);
 }
