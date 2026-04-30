@@ -36,8 +36,10 @@ export function useClickConfetti() {
   const lastBurstRef = useRef<number>(0);
 
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    const baseCount = isMobile ? 7 : 24; // ~70% reduction on mobile
+    // Strictly bypass confetti on mobile to save CPU/GPU
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
+    const isMobile = false;
+    const baseCount = 24;
 
     const canvas = document.createElement("canvas");
     canvas.style.cssText =
