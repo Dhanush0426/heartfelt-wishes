@@ -36,9 +36,8 @@ export function useClickConfetti() {
   const lastBurstRef = useRef<number>(0);
 
   useEffect(() => {
-    // Strictly bypass confetti on mobile to save CPU/GPU
-    if (typeof window === "undefined" || window.innerWidth < 768) return;
-    const isMobile = false;
+    if (typeof window === "undefined") return;
+    const isMobile = window.innerWidth < 768;
     const baseCount = 24;
 
     const canvas = document.createElement("canvas");
