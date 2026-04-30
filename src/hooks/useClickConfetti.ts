@@ -105,7 +105,7 @@ export function useClickConfetti() {
       if (rafRef.current == null) rafRef.current = requestAnimationFrame(tick);
     };
 
-    const drawStar = (cx: number, cy: number, r: number) => {
+    const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) => {
       ctx.beginPath();
       for (let i = 0; i < 10; i++) {
         const a = (Math.PI / 5) * i - Math.PI / 2;
@@ -155,7 +155,7 @@ export function useClickConfetti() {
         } else if (p.shape === "rect") {
           ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
         } else {
-          drawStar(0, 0, p.size / 2);
+          drawStar(ctx, 0, 0, p.size / 2);
         }
         ctx.restore();
         if (p.life >= p.maxLife || p.y > window.innerHeight + 30) {
