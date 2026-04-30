@@ -15,32 +15,39 @@ type Particle = {
 };
 
 const COLORS = [
-  "#f8c8d4", // soft pink
-  "#e89bb0", // pink
-  "#ffffff", // white
-  "#fff3d6", // cream
-  "#e8c66b", // gold
-  "#d4af6a", // shimmer gold
-  "#f3d6e3", // blush
-  "#c9a4d4", // iridescent lavender
-  "#a8d8e8", // iridescent blue
+  "#f8c8d4",
+  "#e89bb0",
+  "#ffffff",
+  "#fff3d6",
+  "#e8c66b",
+  "#d4af6a",
+  "#f3d6e3",
+  "#c9a4d4",
+  "#a8d8e8",
 ];
+
+const MAX_PARTICLES = 200;
+const THROTTLE_MS = 120;
 
 export function useClickConfetti() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number | null>(null);
+  const lastBurstRef = useRef<number>(0);
 
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const baseCount = isMobile ? 7 : 24; // ~70% reduction on mobile
+
     const canvas = document.createElement("canvas");
     canvas.style.cssText =
-      "position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;";
+      "position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;will-change:transform;transform:translate3d(0,0,0);";
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d", { alpha: true })!;
 
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -49,7 +56,14 @@ export function useClickConfetti() {
     window.addEventListener("resize", resize);
 
     const burst = (x: number, y: number) => {
-      const count = 24;
+      const now = performance.now();
+      if (now - lastBurstRef.current < THROTTLE_MS) return;
+      lastBurstRef.current = now;
+
+      const remaining = MAX_PARTICLES - particlesRef.current.length;
+      if (remaining <= 0) return;
+      const count = Math.min(baseCount, remaining);
+
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
         const speed = 3 + Math.random() * 4;
@@ -68,7 +82,7 @@ export function useClickConfetti() {
           maxLife: 60 + Math.random() * 30,
         });
       }
-      if (rafRef.current == null) tick();
+      if (rafRef.current == null) rafRef.current = requestAnimationFrame(tick);
     };
 
     const drawStar = (cx: number, cy: number, r: number) => {
@@ -88,10 +102,11 @@ export function useClickConfetti() {
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const arr = particlesRef.current;
+      const useShadow = !isMobile;
       for (let i = arr.length - 1; i >= 0; i--) {
         const p = arr[i];
         p.life++;
-        p.vy += 0.15; // gravity
+        p.vy += 0.15;
         p.vx *= 0.99;
         p.x += p.vx;
         p.y += p.vy;
@@ -103,8 +118,10 @@ export function useClickConfetti() {
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = p.color;
+        if (useShadow) {
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = p.color;
+        }
         if (p.shape === "circle") {
           ctx.beginPath();
           ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
@@ -123,18 +140,20 @@ export function useClickConfetti() {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     };
 
     const onPointer = (e: PointerEvent) => {
       burst(e.clientX, e.clientY);
     };
-    window.addEventListener("pointerdown", onPointer);
+    window.addEventListener("pointerdown", onPointer, { passive: true });
 
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointerdown", onPointer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      particlesRef.current = [];
       canvas.remove();
     };
   }, []);
