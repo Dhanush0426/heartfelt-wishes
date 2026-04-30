@@ -253,7 +253,7 @@ const Index = () => {
         >
           <div className="space-y-4 text-foreground/80 text-sm sm:text-base leading-relaxed">
             <p>
-              Happiest birthday my dear 𝚋̶𝚎̶𝚜̶𝚝̶𝚏̶𝚛̶𝚒̶𝚎̶𝚗̶𝚍̶
+              Happiest birthday my dear <s className="text-muted-foreground">best friend</s>...
             </p>
             <p>
               ohh I'm sorry😅 I know you don't like "best friends"…
