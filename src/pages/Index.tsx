@@ -2,9 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import birthdayPhoto from "@/assets/birthday-photo.jpg";
 import greetingCard from "@/assets/greeting-card.png";
-import { useClickConfetti } from "@/hooks/useClickConfetti";
 
-const floatingItems = Array.from({ length: 45 }, (_, i) => ({
+const floatingItems = Array.from({ length: 12 }, (_, i) => ({
   id: i,
   emoji: ["💖", "✨", "🤍", "🎂", "🎈", "🎉"][i % 6],
   left: `${Math.random() * 100}%`,
@@ -13,7 +12,7 @@ const floatingItems = Array.from({ length: 45 }, (_, i) => ({
   size: `${0.7 + Math.random() * 1.3}rem`,
 }));
 
-const particles = Array.from({ length: 16 }, (_, i) => ({
+const particles = Array.from({ length: 5 }, (_, i) => ({
   id: i,
   left: `${10 + Math.random() * 80}%`,
   top: `${10 + Math.random() * 80}%`,
@@ -40,8 +39,6 @@ const Index = () => {
   const [showFlipSparkle, setShowFlipSparkle] = useState(false);
   const [cardLoaded, setCardLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useClickConfetti();
 
   // Preload greeting card image so the modal opens instantly with no stutter
   useEffect(() => {
@@ -159,7 +156,7 @@ const Index = () => {
       {/* Music toggle */}
       <button
         onClick={toggleMusic}
-        className="fixed top-4 right-4 z-50 glass rounded-full p-3 transition-all duration-300 hover:scale-110 text-foreground/70 hover:text-foreground"
+        className="fixed top-4 right-4 z-50 bg-white/80 shadow-md rounded-full p-3 transition-all duration-300 hover:scale-110 text-foreground/70 hover:text-foreground"
         aria-label={isMuted ? "Unmute" : "Mute"}
       >
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -245,11 +242,11 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Glass card with message */}
+        {/* Solid card with message */}
         <div
           id="message"
           data-animate
-          className={`mt-10 sm:mt-14 w-full glass rounded-2xl p-6 sm:p-8 md:p-10 shadow-lg transition-all duration-1000 ${isVisible("message") ? "animate-fade-in-up" : "opacity-0"}`}
+          className={`mt-10 sm:mt-14 w-full bg-white/80 border border-white/40 rounded-2xl p-6 sm:p-8 md:p-10 shadow-lg transition-all duration-1000 ${isVisible("message") ? "animate-fade-in-up" : "opacity-0"}`}
         >
           <div className="space-y-4 text-foreground/80 text-sm sm:text-base leading-relaxed">
             <p>
@@ -280,7 +277,7 @@ const Index = () => {
         <div
           id="extra"
           data-animate
-          className={`mt-8 sm:mt-10 w-full glass rounded-2xl p-6 sm:p-8 text-foreground/70 text-sm sm:text-base space-y-3 transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
+          className={`mt-8 sm:mt-10 w-full bg-white/80 border border-white/40 rounded-2xl p-6 sm:p-8 text-foreground/70 text-sm sm:text-base space-y-3 transition-all duration-1000 delay-200 ${isVisible("extra") ? "animate-fade-in-up" : "opacity-0"}`}
         >
           <p>I hope you always find reasons to smile, even on tough days ✨</p>
           <p>You deserve good things, always.</p>
@@ -338,11 +335,8 @@ const Index = () => {
             <img
               src={greetingCard}
               alt="Birthday greeting card"
-              decoding="async"
-              fetchPriority="high"
-              sizes="(max-width: 768px) 90vw, 28rem"
               className={`w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 ${cardLoaded ? "opacity-100" : "opacity-0"}`}
-              style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
+              style={{ transform: "translateZ(0)" }}
               onLoad={() => setCardLoaded(true)}
             />
           </div>
