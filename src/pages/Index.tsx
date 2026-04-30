@@ -327,7 +327,11 @@ const Index = () => {
             <img
               src={greetingCard}
               alt="Birthday greeting card"
-              className="w-full max-w-md rounded-2xl shadow-2xl animate-paper-float"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 768px) 90vw, 28rem"
+              className="w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float"
+              style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
             />
           </div>
         )}
