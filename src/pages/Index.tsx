@@ -38,9 +38,17 @@ const Index = () => {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [isMuted, setIsMuted] = useState(true);
   const [showFlipSparkle, setShowFlipSparkle] = useState(false);
+  const [cardLoaded, setCardLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useClickConfetti();
+
+  // Preload greeting card image so the modal opens instantly with no stutter
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setCardLoaded(true);
+    img.src = greetingCard;
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -323,15 +331,19 @@ const Index = () => {
 
         {/* Hidden greeting card reveal */}
         {showGift && (
-          <div className="mt-10 w-full flex justify-center animate-reveal">
+          <div
+            className="mt-10 w-full flex justify-center animate-reveal"
+            style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
+          >
             <img
               src={greetingCard}
               alt="Birthday greeting card"
-              loading="lazy"
               decoding="async"
+              fetchPriority="high"
               sizes="(max-width: 768px) 90vw, 28rem"
-              className="w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float"
+              className={`w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 ${cardLoaded ? "opacity-100" : "opacity-0"}`}
               style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
+              onLoad={() => setCardLoaded(true)}
             />
           </div>
         )}
