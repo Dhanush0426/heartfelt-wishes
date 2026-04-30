@@ -43,6 +43,7 @@ const Index = () => {
 
   useClickConfetti();
 
+  // Preload greeting card image so the modal opens instantly with no stutter
   useEffect(() => {
     const img = new Image();
     img.onload = () => setCardLoaded(true);
@@ -95,6 +96,7 @@ const Index = () => {
         background: "linear-gradient(135deg, hsl(330 50% 92%), hsl(270 40% 92%), hsl(300 20% 97%), hsl(0 0% 100%))",
       }}
     >
+      {/* Bunting / triangle flags decoration */}
       <div className="fixed top-0 left-0 right-0 z-20 flex justify-center pointer-events-none">
         <svg viewBox="0 0 900 80" className="w-full max-w-3xl" style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>
           <path d="M0 10 Q450 50 900 10" stroke="hsl(330 40% 70%)" strokeWidth="2" fill="none" />
@@ -114,6 +116,7 @@ const Index = () => {
         </svg>
       </div>
 
+      {/* Floating emojis */}
       {floatingItems.map((item) => (
         <span
           key={item.id}
@@ -130,6 +133,7 @@ const Index = () => {
         </span>
       ))}
 
+      {/* Dreamy particles */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -146,22 +150,27 @@ const Index = () => {
         />
       ))}
 
+      {/* Candle decorations */}
       <div className="fixed top-16 left-4 z-10 pointer-events-none opacity-60 text-2xl sm:text-3xl animate-gentle-pulse">🕯️</div>
       <div className="fixed top-24 right-6 z-10 pointer-events-none opacity-60 text-2xl sm:text-3xl animate-gentle-pulse" style={{ animationDelay: "1s" }}>🕯️</div>
       <div className="fixed bottom-20 left-8 z-10 pointer-events-none opacity-50 text-xl animate-gentle-pulse" style={{ animationDelay: "2s" }}>🕯️</div>
       <div className="fixed bottom-32 right-4 z-10 pointer-events-none opacity-50 text-xl animate-gentle-pulse" style={{ animationDelay: "0.5s" }}>🕯️</div>
 
+      {/* Music toggle */}
       <button
         onClick={toggleMusic}
-        className="fixed top-4 right-4 z-50 glass rounded-full p-3 transition-all duration-300 hover:scale-110 text-foreground/70 hover:text-foreground touch-manipulation"
+        className="fixed top-4 right-4 z-50 glass rounded-full p-3 transition-all duration-300 hover:scale-110 text-foreground/70 hover:text-foreground"
         aria-label={isMuted ? "Unmute" : "Mute"}
       >
         {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </button>
 
+      {/* Main content */}
       <div className="relative z-10 flex flex-col items-center px-4 py-10 sm:py-16 md:py-20 max-w-2xl mx-auto">
+        {/* Cake decoration at top */}
         <div className="text-4xl sm:text-5xl mb-2 animate-gentle-pulse">🎂</div>
 
+        {/* Hero heading */}
         <div
           id="hero"
           data-animate
@@ -172,36 +181,37 @@ const Index = () => {
           </h1>
         </div>
 
-        {/* --- FIXED MOBILE TAP SECTION --- */}
+        {/* Flip photo section */}
         <div
           id="photo"
           data-animate
-          className={`mt-10 sm:mt-14 transition-all duration-1000 w-full flex justify-center ${isVisible("photo") ? "animate-zoom-in" : "opacity-0"}`}
+          className={`mt-10 sm:mt-14 transition-all duration-1000 ${isVisible("photo") ? "animate-zoom-in" : "opacity-0"}`}
         >
-          <button
-            type="button"
-            className="relative cursor-pointer perspective-800 touch-manipulation border-none bg-transparent p-0 outline-none select-none"
+          <div
+            className="relative cursor-pointer perspective-800"
             onClick={handleFlip}
             title="Tap to flip!"
-            style={{ WebkitTapHighlightColor: "transparent" }}
           >
             <div
               className={`w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 transition-transform duration-700 preserve-3d ${isFlipped ? "rotate-y-180" : ""}`}
             >
-              <div className="absolute inset-0 backface-hidden rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl pointer-events-none">
+              {/* Front: Cake */}
+              <div className="absolute inset-0 backface-hidden rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
                 <div className="w-full h-full flex items-center justify-center bg-secondary text-5xl sm:text-6xl">
                   🎂
                 </div>
               </div>
-              <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl pointer-events-none">
+              {/* Back: Photo */}
+              <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-full overflow-hidden animate-glow-pulse border-4 border-primary/30 shadow-xl">
                 <img
                   src={birthdayPhoto}
                   alt="Birthday photo"
-                  className="w-full h-full object-cover pointer-events-none"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
 
+            {/* Flip sparkle effect */}
             {showFlipSparkle && (
               <>
                 <div className="absolute inset-0 rounded-full animate-flip-sparkle border-2 border-primary/40 pointer-events-none" />
@@ -227,14 +237,15 @@ const Index = () => {
               </>
             )}
 
-            <div className="absolute inset-0 rounded-full border-2 border-primary/10 scale-110 animate-gentle-pulse pointer-events-none" />
-            <p className="text-xs text-muted-foreground mt-3 text-center pointer-events-none">
+            {/* Decorative ring */}
+            <div className="absolute inset-0 rounded-full border-2 border-primary/10 scale-110 animate-gentle-pulse" />
+            <p className="text-xs text-muted-foreground mt-3 text-center">
               {isFlipped ? "tap to flip back" : "tap the cake! 🎂"}
             </p>
-          </button>
+          </div>
         </div>
-        {/* --- END FIXED MOBILE TAP SECTION --- */}
 
+        {/* Glass card with message */}
         <div
           id="message"
           data-animate
@@ -265,6 +276,7 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Extra lines */}
         <div
           id="extra"
           data-animate
@@ -281,6 +293,7 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Gift button */}
         <div
           id="gift"
           data-animate
@@ -291,12 +304,13 @@ const Index = () => {
               setGiftClicked(true);
               setTimeout(() => setShowGift(true), 600);
             }}
-            className={`px-8 py-3 sm:px-10 sm:py-4 rounded-full bg-primary text-primary-foreground font-medium text-base sm:text-lg shadow-lg transition-all duration-300 hover:scale-105 animate-glow-pulse hover:shadow-2xl active:scale-95 touch-manipulation ${giftClicked ? "animate-gift-unwrap" : ""}`}
+            className={`px-8 py-3 sm:px-10 sm:py-4 rounded-full bg-primary text-primary-foreground font-medium text-base sm:text-lg shadow-lg transition-all duration-300 hover:scale-105 animate-glow-pulse hover:shadow-2xl active:scale-95 ${giftClicked ? "animate-gift-unwrap" : ""}`}
           >
             Click here 🎁
           </button>
         </div>
 
+        {/* Confetti burst */}
         {giftClicked && (
           <div className="relative w-full flex justify-center -mt-4 pointer-events-none">
             {confettiEmojis.map((emoji, i) => (
@@ -315,6 +329,7 @@ const Index = () => {
           </div>
         )}
 
+        {/* Hidden greeting card reveal */}
         {showGift && (
           <div
             className="mt-10 w-full flex justify-center animate-reveal"
@@ -326,7 +341,7 @@ const Index = () => {
               decoding="async"
               fetchPriority="high"
               sizes="(max-width: 768px) 90vw, 28rem"
-              className={`w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 pointer-events-none ${cardLoaded ? "opacity-100" : "opacity-0"}`}
+              className={`w-full max-w-md h-auto rounded-2xl shadow-2xl animate-paper-float transition-opacity duration-300 ${cardLoaded ? "opacity-100" : "opacity-0"}`}
               style={{ willChange: "transform, opacity", transform: "translate3d(0,0,0)" }}
               onLoad={() => setCardLoaded(true)}
             />
